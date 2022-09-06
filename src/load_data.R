@@ -59,8 +59,8 @@ art2exp1 <- art2exp1[,-c(1:3)]
 art2exp2 <- art2exp2[,-c(1:2)]
 
 # Make a 'experimenter' variable (0: no experimenter)
-art2exp1$experimenter <- 0
-art2exp2$experimenter <- 0
+art2exp1$Experimenter <- 0
+art2exp2$Experimenter <- 0
 
 # Reorder variables
 art2exp1 <- art2exp1[,c(1,2,84,13,85,10,14:83,11,12,9,3:8)]
