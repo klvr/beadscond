@@ -92,4 +92,112 @@ exp3 <- exp3[!rownames(exp3)==45496,]
 # Save participants and data removed
 missing <- rbind(exp1missing, exp2missing, exp3missing, exp4missing, exp3double, exp3pilot)
 
-# 05 Clean beads data ------------------------------------------------------------------------------
+# 05 Clean beads sequence data ---------------------------------------------------------------------
+
+# Exp 1
+## Rename sequence variables
+colnames(exp1)[1] <- "SimilarFirst"
+colnames(exp1)[2] <- "BeadsEarly"
+exp1$BeadsEarly <- (exp1$BeadsEarly*-1)+1 # Flip coding
+
+# Exp 2
+## Rename sequence variables
+colnames(exp2)[1] <- "SimilarFirst"
+colnames(exp2)[2] <- "BeadsEarly"
+exp2$BeadsEarly <- (exp2$BeadsEarly*-1)+1 # Flip coding
+
+# Exp 3
+## Two first variables are redundant now that duplicates and missing data is removed. 
+## (self-reports determining whether they got beads at the end or not).
+exp3 <- exp3[,-2]
+colnames(exp3)[1] <- "SimilarFirst"
+exp3$SimilarFirst <- 0
+## Same with condition variable, that is apparent in the data
+exp3 <- exp3[,-3]
+## Rename sequence variable to match the others
+colnames(exp3)[2] <- "BeadsEarly"
+
+# Exp 4
+## Rename sequence variable to match the others
+colnames(exp4)[1] <- "SimilarFirst"
+## Condition variable is apparent in the data, change this into "BeadsEarly"
+colnames(exp4)[2] <- "BeadsEarly"
+exp4$BeadsEarly <- 0
+
+# 06 Clean setup bead by bead data (exp 3 and 4) ---------------------------------------------------
+
+# Exp 3
+## Collect data into same variables
+a <- seq(from = 6, by = 4, length.out = 10) #ProbMin
+b <- seq(from = 45, by = 3, length.out = 10) #ProbMin
+x <- 1
+while (x < 11) {
+for (i in 1:nrow(exp3)) {
+  if (is.na(exp3[i,a[x]]) && !is.na(exp3[i,b[x]])) {exp3[i,a[x]] <- exp3[i,b[x]]}
+}
+  x <- x+1
+}
+a <- seq(from = 7, by = 4, length.out = 10) #ProbMaj
+b <- seq(from = 46, by = 3, length.out = 10) #ProbMaj
+x <- 1
+while (x < 11) {
+  for (i in 1:nrow(exp3)) {
+    if (is.na(exp3[i,a[x]]) && !is.na(exp3[i,b[x]])) {exp3[i,a[x]] <- exp3[i,b[x]]}
+  }
+  x <- x+1
+}
+a <- seq(from = 8, by = 4, length.out = 10) #Choice
+b <- seq(from = 47, by = 3, length.out = 10) #Choice
+x <- 1
+while (x < 11) {
+  for (i in 1:nrow(exp3)) {
+    if (is.na(exp3[i,a[x]]) && !is.na(exp3[i,b[x]])) {exp3[i,a[x]] <- exp3[i,b[x]]}
+  }
+  x <- x+1
+}
+## Remove redundant variables (inc. EDP and CAD)
+exp3 <- exp3[,-c(45:76)]
+## Rename DtD variable
+colnames(exp3)[4] <- "BeadsFishDtD1"
+
+# Exp 4
+## Collect data into same variables
+a <- seq(from = 6, by = 4, length.out = 10) #ProbMin
+b <- seq(from = 45, by = 3, length.out = 10) #ProbMin
+x <- 1
+while (x < 11) {
+  for (i in 1:nrow(exp4)) {
+    if (is.na(exp4[i,a[x]]) && !is.na(exp4[i,b[x]])) {exp4[i,a[x]] <- exp4[i,b[x]]}
+  }
+  x <- x+1
+}
+a <- seq(from = 7, by = 4, length.out = 10) #ProbMaj
+b <- seq(from = 46, by = 3, length.out = 10) #ProbMaj
+x <- 1
+while (x < 11) {
+  for (i in 1:nrow(exp4)) {
+    if (is.na(exp4[i,a[x]]) && !is.na(exp4[i,b[x]])) {exp4[i,a[x]] <- exp4[i,b[x]]}
+  }
+  x <- x+1
+}
+a <- seq(from = 8, by = 4, length.out = 10) #Choice
+b <- seq(from = 47, by = 3, length.out = 10) #Choice
+x <- 1
+while (x < 11) {
+  for (i in 1:nrow(exp4)) {
+    if (is.na(exp4[i,a[x]]) && !is.na(exp4[i,b[x]])) {exp4[i,a[x]] <- exp4[i,b[x]]}
+  }
+  x <- x+1
+}
+## Remove redundant variables (inc. EDP and CAD)
+exp4 <- exp4[,-c(45:76)]
+## Rename DtD variable
+colnames(exp4)[4] <- "BeadsFishDtD1"
+
+# 07 Output cleaned files --------------------------------------------------------------------------
+
+write.csv(demographics, "data/processed/demographics.csv")
+write.csv(exp1, "data/processed/exp1.csv")
+write.csv(exp2, "data/processed/exp2.csv")
+write.csv(exp3, "data/processed/exp3.csv")
+write.csv(exp4, "data/processed/exp4.csv")
